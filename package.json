@@ -1,18 +1,28 @@
 {
-  "name": "cashmoney",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "next",
-    "build": "next build",
-    "start": "next start"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "next": "^9.3.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
-  }
+    "name": "cashmoney",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "next",
+        "build": "next build",
+        "start": "next start"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "better-sqlite3": "^6.0.1",
+        "isomorphic-unfetch": "^3.0.0",
+        "next": "^9.3.4",
+        "react": "^16.13.1",
+        "react-bulma-components": "^3.2.0",
+        "react-dom": "^16.13.1"
+    },
+    "devDependencies": {
+        "eslint": "^6.8.0",
+        "eslint-config-prettier": "^6.10.1",
+        "eslint-plugin-prettier": "^3.1.2",
+        "eslint-plugin-react": "^7.19.0",
+        "prettier": "^2.0.4"
+    }
 }

@@ -1,0 +1,24 @@
+{
+    "root": true,
+    "env": {
+        "node": true
+    },
+    "extends": ["eslint:recommended", "prettier", "plugin:react/recommended"],
+    "plugins": ["prettier"],
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2020
+    },
+    "rules": {
+        "prettier/prettier": "warn",
+        "no-use-before-define": "warn",
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+        "react/display-name": "off",
+        "react/react-in-jsx-scope": "off"
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}
