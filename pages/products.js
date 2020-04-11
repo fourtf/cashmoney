@@ -3,19 +3,24 @@ export async function getServerSideProps(_ctx) {
 
     return {
         props: {
-            users: db.getAllProducts(),
+            products: db.getAllProducts(),
         },
     }
 }
 
 export default props => (
     <div>
-        <ul>
-            {props.users.map(user => (
-                <li key={JSON.stringify(user)}>
-                    <a href={'/users/' + user.name}>{user.name}</a>
+        <ul style={{ display: 'inline-block', 'text-align': 'center' }}>
+            {props.products.map(product => (
+                <li key={JSON.stringify(product)}>
+                    <a href={'/products/' + product.id}>
+                        {product.name || 'no name'}
+                    </a>
                 </li>
             ))}
+        </ul>
+        <ul>
+            <a href="/add-product">Add</a>
         </ul>
     </div>
 )

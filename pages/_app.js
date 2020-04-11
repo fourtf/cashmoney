@@ -13,6 +13,13 @@ function MyApp({ Component, pageProps }) {
         <div>
             <MainNav />
             <Component {...pageProps} />
+            <style jsx>
+                {`
+                    body {
+                        font-family: 'Segoe UI';
+                    }
+                `}
+            </style>
         </div>
     )
 }
