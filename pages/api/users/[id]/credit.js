@@ -1,4 +1,4 @@
 export default (req, res) => {
-    console.log(req)
+    const { id, amount } = req.query
     res.status(200).json({ credit_cents: 100 })
 }

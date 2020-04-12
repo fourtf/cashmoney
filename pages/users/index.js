@@ -38,13 +38,6 @@ function UsersView(props) {
                 </Level>
             </Box>
 
-            {/* <Heading size="4">
-            Users
-            <Button>
-                <a href="/users/add">Add</a>
-            </Button>
-        </Heading> */}
-
             <ul style={{ display: 'inline-block', 'text-align': 'center' }}>
                 {props.users.map(user => (
                     <li key={user.name}>
