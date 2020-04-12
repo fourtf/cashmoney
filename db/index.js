@@ -30,15 +30,26 @@ try {
 //
 // PRODUCTS
 //
-db.exec(`CREATE TABLE IF NOT EXISTS products (
-    id SERIAL PRIMARY KEY,
+db.exec('DROP TABLE IF EXISTS products')
+db.exec(`CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR NOT NULL DEFAULT '',
+    price_cents INTEGER NOT NULL DEFAULT 100,
     creation_date DATETIME DEFAULT CURRENT_TIMESTAMP
 )`)
 
-// const insertUser = db.prepare('INSERT INTO products (name) VALUES (:name)')
+const insertProduct = db.prepare(
+    'INSERT INTO products (name, price_cents) VALUES (:name, :price_cents)'
+)
 const allProducts = db.prepare('SELECT * from products')
-// const removeUser = db.prepare('DELETE FROM products WHERE name = :name')
+// const removeProduct = db.prepare('DELETE FROM products WHERE name = :name')
+
+try {
+    insertProduct.run({ name: `Mate`, price_cents: 100 })
+    insertProduct.run({ name: `Pizza`, price_cents: 260 })
+} catch (e) {
+    console.error(e)
+}
 
 // Exported wrapper
 export function getUser(name) {
