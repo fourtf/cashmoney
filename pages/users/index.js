@@ -1,7 +1,7 @@
 import { Button, Box, Control, Level, Form } from 'react-bulma-components'
 
 export async function getServerSideProps(_ctx) {
-    const db = await import('../../db')
+    const db = await import('../../db/users')
 
     return {
         props: {
@@ -30,7 +30,7 @@ function UsersView(props) {
 
                     <Level.Side align="right">
                         <Level.Item>
-                            <a href="/users/add">
+                            <a href="/users/create">
                                 <Button color="link">Create New</Button>
                             </a>
                         </Level.Item>
@@ -42,7 +42,9 @@ function UsersView(props) {
                 {props.users.map(user => (
                     <li key={user.name}>
                         <a href={'/users/@' + user.name}>
-                            <Box>{user.name}</Box>
+                            <Box>
+                                {user.name} - {user.credit_cents / 100}€
+                            </Box>
                         </a>
                     </li>
                 ))}

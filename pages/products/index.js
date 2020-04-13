@@ -1,7 +1,7 @@
 import { Button, Table } from 'react-bulma-components'
 
 export async function getServerSideProps(_ctx) {
-    const db = await import('../db')
+    const db = await import('../../db/products')
 
     return {
         props: {

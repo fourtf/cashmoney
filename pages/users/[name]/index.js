@@ -10,12 +10,17 @@ class UserComponent extends Component {
     constructor(props) {
         super(props)
 
-        this.state = props.state
+        this.state = props.initialState
     }
 
     render() {
         console.log('render')
         const props = this.state
+
+        if (props.user == null) {
+            return <div>404 User not found</div>
+        }
+
         return (
             <div>
                 <Heading>{props.user.name}'s Profile</Heading>
@@ -96,7 +101,7 @@ class UserComponent extends Component {
         return async () => {
             try {
                 const url = prepareUrl(
-                    'api/users/%/credit?amount=%',
+                    'api/users/%/credit?change_cents=%',
                     props.user.name,
                     amount
                 )
@@ -108,24 +113,26 @@ class UserComponent extends Component {
                     return n
                 })
             } catch (e) {
-                //
+                alert(e)
             }
         }
     }
 }
 
 export async function getServerSideProps(ctx) {
-    const paramId = ctx.params['id']
+    const paramName = ctx.params['name']
 
-    if (!paramId.startsWith('@')) {
-        ctx.res.writeHead(302, { Location: '/users/@' + paramId })
+    if (!paramName.startsWith('@')) {
+        ctx.res.writeHead(302, { Location: '/users/@' + paramName })
         ctx.res.end()
     }
 
-    const id = paramId.substr(1)
-    const db = await import('../../../db')
-    const user = db.getUser(id)
-    const products = db.getAllProducts()
+    const dbUsers = await import('../../../db/users')
+    const dbProducts = await import('../../../db/products')
+
+    const name = paramName.substr(1)
+    const user = dbUsers.getUser(name) || null
+    const products = dbProducts.getAllProducts()
 
     return {
         props: {
@@ -136,7 +143,7 @@ export async function getServerSideProps(ctx) {
 }
 
 function UserView(props) {
-    return <UserComponent state={props} />
+    return <UserComponent initialState={props} />
 }
 
 export default UserView
