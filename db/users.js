@@ -8,7 +8,6 @@ conn.exec(`CREATE TABLE IF NOT EXISTS users (
     credit_cents INTEGER NOT NULL DEFAULT 0
 )`)
 
-// migration
 const queries = {
     insertUser: conn.prepare('INSERT INTO users (name) VALUES (:name)'),
     allUsers: conn.prepare('SELECT * FROM users ORDER BY last_viewed_date ASC'),
