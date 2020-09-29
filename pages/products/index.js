@@ -1,4 +1,6 @@
 import { Button, Table } from 'react-bulma-components'
+import prepareUrl from '../../util/prepareUrl'
+import fetch from 'isomorphic-unfetch'
 
 export async function getServerSideProps(_ctx) {
     const db = await import('../../db/products')
@@ -24,10 +26,8 @@ function ProductsView(props) {
 
     return (
         <div>
-            <a href="/add-product">
-                <Button color="link" href="/add-product">
-                    Add
-                </Button>
+            <a href="/create-product">
+                <Button color="link">Add</Button>
             </a>
 
             <Table>
@@ -44,12 +44,30 @@ function ProductsView(props) {
                             {headers.map(header => (
                                 <td key="header">{product[header]}</td>
                             ))}
+
+                            <td>
+                                <Button onClick={() => delet(product.id)}>
+                                    {' '}
+                                    Delete
+                                </Button>{' '}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
         </div>
     )
+}
+
+async function delet(id) {
+    try {
+        const url = prepareUrl('api/products/delete/%', id)
+        await fetch(url).then(x => x.json())
+
+        window.location.reload()
+    } catch (e) {
+        alert(e)
+    }
 }
 
 export default ProductsView

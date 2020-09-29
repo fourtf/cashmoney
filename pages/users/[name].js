@@ -1,6 +1,6 @@
 import { Button, Box, Columns, Heading } from 'react-bulma-components'
 import fetch from 'isomorphic-unfetch'
-import prepareUrl from '../../../util/prepareUrl'
+import prepareUrl from '../../util/prepareUrl'
 import { Component } from 'react'
 
 const bills = [1, 2, 5, 10, 20, 50]
@@ -120,17 +120,11 @@ class UserComponent extends Component {
 }
 
 export async function getServerSideProps(ctx) {
-    const paramName = ctx.params['name']
+    const name = ctx.params['name']
 
-    if (!paramName.startsWith('@')) {
-        ctx.res.writeHead(302, { Location: '/users/@' + paramName })
-        ctx.res.end()
-    }
+    const dbUsers = await import('../../db/users')
+    const dbProducts = await import('../../db/products')
 
-    const dbUsers = await import('../../../db/users')
-    const dbProducts = await import('../../../db/products')
-
-    const name = paramName.substr(1)
     const user = dbUsers.getUser(name) || null
     const products = dbProducts.getAllProducts()
 

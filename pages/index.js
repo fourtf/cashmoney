@@ -17,7 +17,7 @@ function TileLink({ text, href, color }) {
     )
 }
 
-export default function () {
+export default function AppIndex() {
     return (
         <div>
             <Tile kind="ancestor">
@@ -32,3 +32,4 @@ export default function () {
         </div>
     )
 }
+

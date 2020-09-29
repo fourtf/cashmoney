@@ -1,7 +1,7 @@
 import { Button, Form } from 'react-bulma-components'
 import { Component } from 'react'
 import fetch from 'isomorphic-unfetch'
-import prepareUrl from '../../util/prepareUrl'
+import prepareUrl from '../util/prepareUrl'
 import Router from 'next/router'
 
 const { Control, Field, Input } = Form
@@ -12,7 +12,7 @@ class NewUserComponent extends Component {
         this.state = {
             enabled: true,
             name: '',
-            nameColor: null,
+            price_cents: 100,
         }
     }
 
@@ -21,13 +21,22 @@ class NewUserComponent extends Component {
             <div>
                 <Field>
                     <Control>
-                        Name (a-z, 0-9, _):
+                        Name:
                         <Input
                             type="text"
                             value={this.state.name}
-                            onChange={this.inputOnChange.bind(this)}
-                            color={this.state.nameColor}
-                            className={this.state.enabled ? '' : 'is-disabled'}
+                            onChange={this.setName.bind(this)}
+                            disabled={!this.state.enabled}
+                        />
+                    </Control>
+                </Field>
+                <Field>
+                    <Control>
+                        Price (in ct):
+                        <Input
+                            type="number"
+                            value={this.state.price_cents}
+                            onChange={this.setPrice.bind(this)}
                             disabled={!this.state.enabled}
                         />
                     </Control>
@@ -38,7 +47,7 @@ class NewUserComponent extends Component {
                             onClick={this.submit.bind(this)}
                             className={this.state.enabled ? '' : 'is-loading'}
                         >
-                            Create User
+                            Create Product
                         </Button>
                     </Control>
                 </Field>
@@ -46,47 +55,32 @@ class NewUserComponent extends Component {
         )
     }
 
-    inputOnChange(e) {
-        this.setState({ name: e.target.value.toLowerCase(), nameColor: null })
-        this.checkAvailable(e.target.value)
+    setName(e) {
+        this.setState({ name: e.target.value })
     }
 
-    async checkAvailable(name) {
-        if (name.length == 0) {
-            return
-        }
-
-        try {
-            const url = prepareUrl('api/users/%/name_available', name)
-            const result = await fetch(url).then(x => x.json())
-
-            if (this.state.name == name) {
-                this.setState({
-                    nameColor: result.available ? 'success' : 'danger',
-                })
-            }
-        } catch (e) {
-            console.error(e)
-        }
+    setPrice(e) {
+        this.setState({ price_cents: parseInt(e.target.value) })
     }
 
     async submit() {
-        const name = this.state.name
-        if (name.length == 0) {
-            return
-        }
-
         this.setState({ enabled: false })
 
         try {
-            const url = prepareUrl('api/users/%/create', name)
-            const result = await fetch(url).then(e => e.json())
+            const url = prepareUrl('api/products/create')
+            const result = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: this.state.name,
+                    price_cents: this.state.price_cents,
+                }),
+            }).then(e => e.json())
 
             if (result.error) {
                 throw result.error
             }
 
-            Router.push('/users')
+            Router.push('/products')
         } catch (e) {
             alert(e)
             this.setState({ enabled: true })
