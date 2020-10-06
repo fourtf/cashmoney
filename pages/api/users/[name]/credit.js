@@ -1,7 +1,7 @@
 import { modifyUserCredit } from '../../../../db/users'
 
 export default (req, res) => {
-    const { name, change_cents } = req.query
+    const { id, change_cents } = req.query
 
-    res.status(200).json(modifyUserCredit(name, change_cents))
+    res.status(200).json(modifyUserCredit(id, change_cents))
 }

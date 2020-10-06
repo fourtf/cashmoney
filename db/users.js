@@ -2,7 +2,8 @@ import conn from './connection'
 
 // USERS
 conn.exec(`CREATE TABLE IF NOT EXISTS users (
-    name VARCHAR PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR,
     creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_viewed_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     credit_cents INTEGER NOT NULL DEFAULT 0
@@ -11,22 +12,23 @@ conn.exec(`CREATE TABLE IF NOT EXISTS users (
 const queries = {
     insertUser: conn.prepare('INSERT INTO users (name) VALUES (:name)'),
     allUsers: conn.prepare('SELECT * FROM users ORDER BY last_viewed_date ASC'),
-    removeUser: conn.prepare('DELETE FROM users WHERE name = :name'),
-    getUser: conn.prepare('SELECT * FROM users WHERE name = :name'),
+    removeUser: conn.prepare('DELETE FROM users WHERE id = :id'),
+    getUser: conn.prepare('SELECT * FROM users WHERE id = :id'),
+    getUserByName: conn.prepare('SELECT * FROM users WHERE name = :name'),
     modifyUserCredit: conn.prepare(`
         UPDATE users
         SET credit_cents = credit_cents + :change_cents
-        WHERE name = :name
+        WHERE id = :id
     `),
     updateLastViewedDate: conn.prepare(`
         UPDATE users
         SET last_viewed_date = CURRENT_TIMESTAMP
-        WHERE name = :name
+        WHERE id = :id
         `),
 }
 
-export function getUser(name) {
-    const user = queries.getUser.get({ name })
+export function getUser(id) {
+    const user = queries.getUser.get({ id })
 
     return user
 }
@@ -45,10 +47,10 @@ export function addUser(name) {
     queries.insertUser.run({ name })
 }
 
-export function modifyUserCredit(name, change_cents) {
+export function modifyUserCredit(id, change_cents) {
     return conn.transaction(() => {
-        queries.modifyUserCredit.run({ name, change_cents })
-        return queries.getUser.get({ name })
+        queries.modifyUserCredit.run({ id, change_cents })
+        return queries.getUser.get({ id })
     })()
 }
 
@@ -56,10 +58,10 @@ export function userAvailable(name) {
     if (!allowedUsers.test(name)) {
         return false
     } else {
-        return queries.getUser.all({ name }).length == 0
+        return queries.getUserByName.all({ name }).length == 0
     }
 }
 
-export function updateUsersLastViewedDate(name) {
-    queries.updateLastViewedDate.run({ name })
+export function updateUsersLastViewedDate(id) {
+    queries.updateLastViewedDate.run({ id })
 }

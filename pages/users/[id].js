@@ -102,7 +102,7 @@ class UserComponent extends Component {
             try {
                 const url = prepareUrl(
                     'api/users/%/credit?change_cents=%',
-                    props.user.name,
+                    props.user.id,
                     amount
                 )
                 const result = await fetch(url).then(x => x.json())
@@ -125,6 +125,7 @@ export async function getServerSideProps(ctx) {
     const dbUsers = await import('../../db/users')
     const dbProducts = await import('../../db/products')
 
+    // TODO
     const user = dbUsers.getUser(name) || null
     const products = dbProducts.getAllProducts()
 
