@@ -14,7 +14,6 @@ class UserComponent extends Component {
     }
 
     render() {
-        console.log('render')
         const props = this.state
 
         if (props.user == null) {

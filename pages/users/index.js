@@ -19,7 +19,7 @@ function UsersView(props) {
                 </a>
             </Box>
 
-            <ul style={{ display: 'inline-block', 'text-align': 'center' }}>
+            <ul style={{ display: 'inline-block', textAlign: 'center' }}>
                 {props.users.map(user => (
                     <li key={user.name}>
                         <a href={'/users/' + user.name}>

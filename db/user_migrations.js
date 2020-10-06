@@ -30,11 +30,17 @@ export function createUsersTable() {
 export function migrateUsersToUsers2() {
     conn.transaction(() => {
         if (tableExists('users')) {
-            queries.createUsers2.run()
-            conn.exec(`INSERT INTO users_2 SELECT * FROM users;`)
+            console.info('MIGRATION: users -> users_2')
+
+            conn.exec(
+                `INSERT INTO users_2
+                    (name, creation_date, last_viewed_date, credit_cents)
+                    SELECT name, creation_date, last_viewed_date, credit_cents
+                    FROM users;`
+            )
             conn.exec('DROP TABLE users')
         }
-    })
+    })()
 }
 
 function tableExists(name) {
