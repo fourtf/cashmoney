@@ -1,27 +1,28 @@
 import conn from './connection'
+import {
+    usersTable as table,
+    migrateUsersToUsers2,
+    createUsersTable,
+} from './user_migrations'
 
-// USERS
-conn.exec(`CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR,
-    creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    last_viewed_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    credit_cents INTEGER NOT NULL DEFAULT 0
-)`)
+createUsersTable()
+migrateUsersToUsers2()
 
 const queries = {
-    insertUser: conn.prepare('INSERT INTO users (name) VALUES (:name)'),
-    allUsers: conn.prepare('SELECT * FROM users ORDER BY last_viewed_date ASC'),
-    removeUser: conn.prepare('DELETE FROM users WHERE id = :id'),
-    getUser: conn.prepare('SELECT * FROM users WHERE id = :id'),
-    getUserByName: conn.prepare('SELECT * FROM users WHERE name = :name'),
+    insertUser: conn.prepare(`INSERT INTO ${table} (name) VALUES (:name)`),
+    allUsers: conn.prepare(
+        `SELECT * FROM ${table} ORDER BY last_viewed_date ASC`
+    ),
+    removeUser: conn.prepare(`DELETE FROM ${table} WHERE id = :id`),
+    getUser: conn.prepare(`SELECT * FROM ${table} WHERE id = :id`),
+    getUserByName: conn.prepare(`SELECT * FROM ${table} WHERE name = :name`),
     modifyUserCredit: conn.prepare(`
-        UPDATE users
+        UPDATE ${table}
         SET credit_cents = credit_cents + :change_cents
         WHERE id = :id
     `),
     updateLastViewedDate: conn.prepare(`
-        UPDATE users
+        UPDATE ${table}
         SET last_viewed_date = CURRENT_TIMESTAMP
         WHERE id = :id
         `),

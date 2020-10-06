@@ -11,7 +11,7 @@
     },
     "rules": {
         "prettier/prettier": "warn",
-        "no-use-before-define": "warn",
+        "no-use-before-define": "off",
         "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
         "react/react-in-jsx-scope": "off"
     },
