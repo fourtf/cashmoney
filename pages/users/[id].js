@@ -119,13 +119,13 @@ class UserComponent extends Component {
 }
 
 export async function getServerSideProps(ctx) {
-    const name = ctx.params['name']
+    const id = ctx.params['id']
 
     const dbUsers = await import('../../db/users')
     const dbProducts = await import('../../db/products')
 
     // TODO
-    const user = dbUsers.getUser(name) || null
+    const user = dbUsers.getUser(id) || null
     const products = dbProducts.getAllProducts()
 
     return {

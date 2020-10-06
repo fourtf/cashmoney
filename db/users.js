@@ -45,7 +45,13 @@ export function addUser(name) {
         throw new Error('name not allowed')
     }
 
-    queries.insertUser.run({ name })
+    conn.transaction(() => {
+        if (queries.getUserByName.get({ name }) == undefined) {
+            queries.insertUser.run({ name })
+        } else {
+            throw new Error('Name already exists')
+        }
+    })()
 }
 
 export function modifyUserCredit(id, change_cents) {

@@ -13,7 +13,7 @@ const queries = {
     createUsers2: conn.prepare(`
         CREATE TABLE IF NOT EXISTS users_2 (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name VARCHAR,
+            name VARCHAR UNIQUE,
             creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             last_viewed_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             credit_cents INTEGER NOT NULL DEFAULT 0

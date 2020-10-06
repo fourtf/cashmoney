@@ -57,7 +57,7 @@ class NewUserComponent extends Component {
         }
 
         try {
-            const url = prepareUrl('api/users/%/name_available', name)
+            const url = prepareUrl('api/usersByName/%/name_available', name)
             const result = await fetch(url).then(x => x.json())
 
             if (this.state.name == name) {
@@ -79,7 +79,7 @@ class NewUserComponent extends Component {
         this.setState({ enabled: false })
 
         try {
-            const url = prepareUrl('api/users/%/create', name)
+            const url = prepareUrl('api/usersByName/%/create', name)
             const result = await fetch(url).then(e => e.json())
 
             if (result.error) {

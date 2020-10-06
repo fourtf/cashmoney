@@ -22,7 +22,7 @@ function UsersView(props) {
             <ul style={{ display: 'inline-block', textAlign: 'center' }}>
                 {props.users.map(user => (
                     <li key={user.name}>
-                        <a href={'/users/' + user.name}>
+                        <a href={'/users/' + user.id}>
                             <Box>
                                 {user.name} - {user.credit_cents / 100}€
                             </Box>
