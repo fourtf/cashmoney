@@ -14,7 +14,6 @@ class UserComponent extends Component {
     }
 
     render() {
-        console.log('render')
         const props = this.state
 
         if (props.user == null) {
@@ -102,7 +101,7 @@ class UserComponent extends Component {
             try {
                 const url = prepareUrl(
                     'api/users/%/credit?change_cents=%',
-                    props.user.name,
+                    props.user.id,
                     amount
                 )
                 const result = await fetch(url).then(x => x.json())
@@ -120,12 +119,13 @@ class UserComponent extends Component {
 }
 
 export async function getServerSideProps(ctx) {
-    const name = ctx.params['name']
+    const id = ctx.params['id']
 
     const dbUsers = await import('../../db/users')
     const dbProducts = await import('../../db/products')
 
-    const user = dbUsers.getUser(name) || null
+    // TODO
+    const user = dbUsers.getUser(id) || null
     const products = dbProducts.getAllProducts()
 
     return {
