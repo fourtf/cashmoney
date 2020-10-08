@@ -40,13 +40,16 @@ class TransactionHistory extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                    {props.transactions.map(transaction => (
+                    {props.transactions.map(transaction =>{
+                        const product_name = transaction.product_name ? transaction.product_name : transaction.amount_cents > 0 ? "Deposit" : "Withdrawal"
+                        const color = transaction.amount_cents > 0 ? "success" : "red"
+                        return(
                         <tr key={transaction.id}>
                             <td>{transaction.date}</td>
-                            <td>{transaction.product_name ? transaction.product_name : transaction.amount_cents > 0 ? "Deposit" : "Withdrawal" }</td>
-                            <td>{(transaction.amount_cents/100).toFixed(2) + "€"}</td>
+                            <td>{product_name}</td>
+                            <td><font color={color}>{(transaction.amount_cents/100).toFixed(2) + "€"}</font></td>
                         </tr>
-                    ))}
+                    )})}
                     </tbody>
                 </Table>
             </div>
