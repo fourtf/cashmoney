@@ -7,5 +7,7 @@ export default (req, res) => {
 
     const product = getProduct(product_id)
     modifyUserCredit(id, -product.price_cents)
-    res.status(200).json(insertTransaction(-product.price_cents, id, product.id))
+    res.status(200).json(
+        insertTransaction(-product.price_cents, id, product.id)
+    )
 }

@@ -27,10 +27,15 @@ export function insertTransaction(
     user_id,
     product_id /* optional */
 ) {
-    let product_name = null;
-    if(product_id) product_name = getProduct(product_id).name
-    queries.insertTransaction.run({ amount_cents, user_id, product_id, product_name })
-    return getUser(user_id);
+    let product_name = null
+    if (product_id) product_name = getProduct(product_id).name
+    queries.insertTransaction.run({
+        amount_cents,
+        user_id,
+        product_id,
+        product_name,
+    })
+    return getUser(user_id)
 }
 
 export function removeTransaction(id) {
@@ -38,5 +43,5 @@ export function removeTransaction(id) {
 }
 
 export function getRecentUserTransactions(user_id, limit) {
-    return queries.recentTransactionsOfUser.all({ user_id, limit });
+    return queries.recentTransactionsOfUser.all({ user_id, limit })
 }

@@ -6,8 +6,7 @@ import TransactionHistory from '../../components/TransactionHistory'
 
 const bills = [1, 2, 5, 10, 20, 50]
 // amount of transactions shown
-const limit = 10;
-
+const limit = 10
 
 // Component which takes the initial state from the props and modifies them when adding/removing credits.
 class UserComponent extends Component {
@@ -60,9 +59,7 @@ class UserComponent extends Component {
                     <ul style={{ margin: '-8px' }}>
                         {props.products.map(product => (
                             <li key={product.id} style={{ margin: '8px' }}>
-                                <a
-                                    onClick={this.handleBuy(props, product)}
-                                >
+                                <a onClick={this.handleBuy(props, product)}>
                                     <Button
                                         style={{
                                             width: '100%',
@@ -70,7 +67,12 @@ class UserComponent extends Component {
                                         }}
                                         color="danger"
                                     >
-                                        {product.name + ": "  + ((product.price_cents) / 100).toFixed(2) + "€"}
+                                        {product.name +
+                                            ': ' +
+                                            (product.price_cents / 100).toFixed(
+                                                2
+                                            ) +
+                                            '€'}
                                     </Button>
                                 </a>
                             </li>
@@ -78,7 +80,11 @@ class UserComponent extends Component {
                     </ul>
                 </div>
                 <div>
-                    <TransactionHistory user_id={props.user.id} limit={limit} refresh={props.refreshTransactions}/>
+                    <TransactionHistory
+                        user_id={props.user.id}
+                        limit={limit}
+                        refresh={props.refreshTransactions}
+                    />
                 </div>
                 <style jsx>{`
                     li {
@@ -115,7 +121,6 @@ class UserComponent extends Component {
                     return n
                 })
                 this.refreshTransactions()
-
             } catch (e) {
                 alert(e)
             }
@@ -138,7 +143,6 @@ class UserComponent extends Component {
                     return n
                 })
                 this.refreshTransactions()
-
             } catch (e) {
                 alert(e)
             }
@@ -146,20 +150,18 @@ class UserComponent extends Component {
     }
 
     refreshTransactions() {
-            this.setState({
-                refreshTransactions: !this.state.refreshTransactions
-            })
+        this.setState({
+            refreshTransactions: !this.state.refreshTransactions,
+        })
     }
 }
 
 export async function getServerSideProps(ctx) {
     const id = ctx.params['id']
 
-
     const dbUsers = await import('../../db/users')
     const dbProducts = await import('../../db/products')
-    const dbTransactions = await import('../../db/transactions');
-
+    const dbTransactions = await import('../../db/transactions')
 
     const user = dbUsers.getUser(id) || null
     const products = dbProducts.getAllProducts()
@@ -169,7 +171,7 @@ export async function getServerSideProps(ctx) {
         props: {
             user,
             products,
-            transactions
+            transactions,
         },
     }
 }
