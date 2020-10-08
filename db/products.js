@@ -14,12 +14,17 @@ const queries = {
         'INSERT INTO products (name, price_cents) VALUES (:name, :price_cents)'
     ),
     allProducts: conn.prepare('SELECT * from products'),
+    getProduct: conn.prepare('SELECT * FROM products WHERE id = :id'),
     removeProduct: conn.prepare('DELETE FROM products WHERE id = :id'),
 }
 
 // Exported wrapper
 export function getAllProducts() {
     return queries.allProducts.all()
+}
+
+export function getProduct(id) {
+    return queries.getProduct.get({ id })
 }
 
 export function createProduct(name, price_cents) {
