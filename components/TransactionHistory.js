@@ -21,8 +21,8 @@ class TransactionHistory extends Component {
                     </thead>
                     <tbody>
                         {props.transactions.map(transaction => {
-                            const product_name = transaction.product_name
-                                ? transaction.product_name
+                            const product_name = transaction.name
+                                ? transaction.name
                                 : transaction.amount_cents > 0
                                 ? 'Deposit'
                                 : 'Withdrawal'
