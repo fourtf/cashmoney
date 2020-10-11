@@ -1,9 +1,12 @@
 import { Button, Box, Columns, Heading } from 'react-bulma-components'
 import fetch from 'isomorphic-unfetch'
 import prepareUrl from '../../util/prepareUrl'
-import { Component } from 'react'
+import React, { Component } from 'react'
+import TransactionHistory from '../../components/TransactionHistory'
 
 const bills = [1, 2, 5, 10, 20, 50]
+
+const transactionLimit = 10
 
 // Component which takes the initial state from the props and modifies them when adding/removing credits.
 class UserComponent extends Component {
@@ -15,7 +18,6 @@ class UserComponent extends Component {
 
     render() {
         const props = this.state
-
         if (props.user == null) {
             return <div>404 User not found</div>
         }
@@ -57,12 +59,7 @@ class UserComponent extends Component {
                     <ul style={{ margin: '-8px' }}>
                         {props.products.map(product => (
                             <li key={product.id} style={{ margin: '8px' }}>
-                                <a
-                                    onClick={this.modifyCredit(
-                                        props,
-                                        -product.price_cents
-                                    )}
-                                >
+                                <a onClick={this.handleBuy(props, product)}>
                                     <Button
                                         style={{
                                             width: '100%',
@@ -70,12 +67,20 @@ class UserComponent extends Component {
                                         }}
                                         color="danger"
                                     >
-                                        {product.name}
+                                        {product.name +
+                                            ': ' +
+                                            (product.price_cents / 100).toFixed(
+                                                2
+                                            ) +
+                                            '€'}
                                     </Button>
                                 </a>
                             </li>
                         ))}
                     </ul>
+                </div>
+                <div>
+                    <TransactionHistory transactions={props.transactions} />
                 </div>
                 <style jsx>{`
                     li {
@@ -111,9 +116,49 @@ class UserComponent extends Component {
                     n.user.credit_cents = result.credit_cents
                     return n
                 })
+                await this.updateTransactions(props)
             } catch (e) {
                 alert(e)
             }
+        }
+    }
+
+    handleBuy(props, product) {
+        return async () => {
+            try {
+                const url = prepareUrl(
+                    'api/users/%/buy?product_id=%',
+                    props.user.id,
+                    product.id
+                )
+                const result = await fetch(url).then(x => x.json())
+
+                this.setState(s => {
+                    let n = { ...s }
+                    n.user.credit_cents = result.credit_cents
+                    return n
+                })
+                await this.updateTransactions(props)
+            } catch (e) {
+                alert(e)
+            }
+        }
+    }
+
+    async updateTransactions(props) {
+        try {
+            const url = prepareUrl(
+                'api/users/%/transactions?limit=%',
+                props.user.id,
+                transactionLimit
+            )
+            const result = await fetch(url).then(x => x.json())
+
+            this.setState({
+                transactions: result,
+            })
+        } catch (e) {
+            alert(e)
         }
     }
 }
@@ -123,15 +168,20 @@ export async function getServerSideProps(ctx) {
 
     const dbUsers = await import('../../db/users')
     const dbProducts = await import('../../db/products')
+    const dbTransactions = await import('../../db/transactions')
 
-    // TODO
     const user = dbUsers.getUser(id) || null
     const products = dbProducts.getAllProducts()
+    const transactions = dbTransactions.getRecentTransactionsOfUser(
+        id,
+        transactionLimit
+    )
 
     return {
         props: {
             user,
             products,
+            transactions,
         },
     }
 }
