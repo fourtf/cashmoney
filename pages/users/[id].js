@@ -5,8 +5,8 @@ import React, { Component } from 'react'
 import TransactionHistory from '../../components/TransactionHistory'
 
 const bills = [1, 2, 5, 10, 20, 50]
-// amount of transactions shown
-const limit = 10
+
+const transactionLimit = 10
 
 // Component which takes the initial state from the props and modifies them when adding/removing credits.
 class UserComponent extends Component {
@@ -80,11 +80,7 @@ class UserComponent extends Component {
                     </ul>
                 </div>
                 <div>
-                    <TransactionHistory
-                        user_id={props.user.id}
-                        limit={limit}
-                        refresh={props.refreshTransactions}
-                    />
+                    <TransactionHistory transactions={props.transactions} />
                 </div>
                 <style jsx>{`
                     li {
@@ -120,7 +116,7 @@ class UserComponent extends Component {
                     n.user.credit_cents = result.credit_cents
                     return n
                 })
-                this.refreshTransactions()
+                await this.updateTransactions(props)
             } catch (e) {
                 alert(e)
             }
@@ -142,17 +138,28 @@ class UserComponent extends Component {
                     n.user.credit_cents = result.credit_cents
                     return n
                 })
-                this.refreshTransactions()
+                await this.updateTransactions(props)
             } catch (e) {
                 alert(e)
             }
         }
     }
 
-    refreshTransactions() {
-        this.setState({
-            refreshTransactions: !this.state.refreshTransactions,
-        })
+    async updateTransactions(props) {
+        try {
+            const url = prepareUrl(
+                'api/users/%/transactions?limit=%',
+                props.user.id,
+                transactionLimit
+            )
+            const result = await fetch(url).then(x => x.json())
+
+            this.setState({
+                transactions: result,
+            })
+        } catch (e) {
+            alert(e)
+        }
     }
 }
 
@@ -165,7 +172,10 @@ export async function getServerSideProps(ctx) {
 
     const user = dbUsers.getUser(id) || null
     const products = dbProducts.getAllProducts()
-    const transactions = dbTransactions.getRecentUserTransactions(id, limit)
+    const transactions = dbTransactions.getRecentTransactionsOfUser(
+        id,
+        transactionLimit
+    )
 
     return {
         props: {

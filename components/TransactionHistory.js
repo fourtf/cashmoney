@@ -1,32 +1,14 @@
 import React, { Component } from 'react'
 import { Table } from 'react-bulma-components'
-import prepareUrl from '../util/prepareUrl'
-import fetch from 'isomorphic-unfetch'
 
 class TransactionHistory extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            transactions: [],
-        }
-    }
-
-    componentDidMount() {
-        this.updateTransactions(this.props.user_id, this.props.limit)
-    }
-
-    componentWillReceiveProps(props) {
-        const { refresh } = props
-        if (this.props.refresh !== refresh) {
-            this.updateTransactions(props.user_id, props.limit)
-        }
+        this.props = props
     }
 
     render() {
-        const props = this.state
-
-        if (!props.transactions.length) return null
-
+        const props = this.props
         return (
             <div>
                 <Table striped bordered>
@@ -64,23 +46,6 @@ class TransactionHistory extends Component {
                 </Table>
             </div>
         )
-    }
-
-    async updateTransactions(user_id, limit) {
-        try {
-            const url = prepareUrl(
-                'api/transactions/get?user_id=%&limit=%',
-                user_id,
-                limit
-            )
-            const result = await fetch(url).then(x => x.json())
-
-            this.setState({
-                transactions: result,
-            })
-        } catch (e) {
-            alert(e)
-        }
     }
 }
 
