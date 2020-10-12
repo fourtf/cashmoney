@@ -29,6 +29,23 @@ class UserComponent extends Component {
                 <div>Balance: {props.user.credit_cents / 100}€</div>
 
                 <Button.Group>
+                    <input
+                        type={'number'}
+                        onChange={event => {
+                            this.setState({ customAdd: event.target.value })
+                        }}
+                    />
+                    <Button
+                        key="custom"
+                        color="success"
+                        onClick={this.modifyCredit(
+                            props,
+                            props.customAdd * 100
+                        )}
+                    >
+                        Custom
+                    </Button>
+
                     {bills.map(bill => (
                         <Button
                             key={bill}
@@ -42,6 +59,22 @@ class UserComponent extends Component {
                 </Button.Group>
 
                 <Button.Group>
+                    <input
+                        type={'number'}
+                        onChange={event => {
+                            this.setState({ customSub: -event.target.value })
+                        }}
+                    />
+                    <Button
+                        key="custom"
+                        color="danger"
+                        onClick={this.modifyCredit(
+                            props,
+                            props.customSub * 100
+                        )}
+                    >
+                        Custom
+                    </Button>
                     {bills.map(bill => (
                         <Button
                             key={bill}
