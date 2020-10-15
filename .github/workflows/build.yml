@@ -14,10 +14,8 @@ jobs:
         steps:
             - uses: actions/checkout@v2.3.3
 
-            - name: Install yarn
-              run: sudo apt-get update && sudo apt-get -y install yarn
-
             - name: Build
               run: |
+                  yarn
                   yarn build
               shell: bash
