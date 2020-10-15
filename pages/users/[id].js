@@ -29,6 +29,23 @@ class UserComponent extends Component {
                 <div>Balance: {props.user.credit_cents / 100}€</div>
 
                 <Button.Group>
+                    <input
+                        type={'number'}
+                        onChange={event => {
+                            this.setState({ customAdd: event.target.value })
+                        }}
+                    />
+                    <Button
+                        key="custom"
+                        color="success"
+                        onClick={this.modifyCredit(
+                            props,
+                            props.customAdd * 100
+                        )}
+                    >
+                        Custom
+                    </Button>
+
                     {bills.map(bill => (
                         <Button
                             key={bill}
@@ -42,6 +59,22 @@ class UserComponent extends Component {
                 </Button.Group>
 
                 <Button.Group>
+                    <input
+                        type={'number'}
+                        onChange={event => {
+                            this.setState({ customSub: -event.target.value })
+                        }}
+                    />
+                    <Button
+                        key="custom"
+                        color="danger"
+                        onClick={this.modifyCredit(
+                            props,
+                            props.customSub * 100
+                        )}
+                    >
+                        Custom
+                    </Button>
                     {bills.map(bill => (
                         <Button
                             key={bill}
@@ -108,6 +141,28 @@ class UserComponent extends Component {
                     'api/users/%/credit?change_cents=%',
                     props.user.id,
                     amount
+                )
+                const result = await fetch(url).then(x => x.json())
+
+                this.setState(s => {
+                    let n = { ...s }
+                    n.user.credit_cents = result.credit_cents
+                    return n
+                })
+                await this.updateTransactions(props)
+            } catch (e) {
+                alert(e)
+            }
+        }
+    }
+
+    handleBuy(props, product) {
+        return async () => {
+            try {
+                const url = prepareUrl(
+                    'api/users/%/buy?product_id=%',
+                    props.user.id,
+                    product.id
                 )
                 const result = await fetch(url).then(x => x.json())
 
