@@ -178,6 +178,28 @@ class UserComponent extends Component {
         }
     }
 
+    handleBuy(props, product) {
+        return async () => {
+            try {
+                const url = prepareUrl(
+                    'api/users/%/buy?product_id=%',
+                    props.user.id,
+                    product.id
+                )
+                const result = await fetch(url).then(x => x.json())
+
+                this.setState(s => {
+                    let n = { ...s }
+                    n.user.credit_cents = result.credit_cents
+                    return n
+                })
+                await this.updateTransactions(props)
+            } catch (e) {
+                alert(e)
+            }
+        }
+    }
+
     async updateTransactions(props) {
         try {
             const url = prepareUrl(
