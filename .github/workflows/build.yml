@@ -1,0 +1,21 @@
+---
+name: Build
+
+on:
+    push: {}
+    pull_request: {}
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+
+        steps:
+            - uses: actions/checkout@v2.3.3
+
+            - name: Build
+              run: |
+                  yarn
+                  yarn build
+              shell: bash
